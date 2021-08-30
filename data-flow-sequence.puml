@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+LoadingFacade --> Component: Observable$
+
+autonumber
+
+DataService -> LoadingInterceptor: Request Out
+LoadingInterceptor --> LoadingState: Start Loading [REQ:ID]
+LoadingState --> LoadingFacade: isLoading = true
+DataService <-- LoadingInterceptor: Response In
+LoadingInterceptor --> LoadingState: Stop Loading  [REQ:ID]
+LoadingState --> LoadingFacade: isLoading = false
+
+@enduml

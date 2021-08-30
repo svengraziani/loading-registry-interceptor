@@ -110,3 +110,8 @@ export class AppComponent {
 
 }
 ```
+
+
+## Data Sequence Diagram
+![](data-flow-sequence.png)
+    
