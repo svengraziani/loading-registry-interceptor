@@ -5,14 +5,22 @@
     "email": "sgraziani@anexia-it.com",
     "name": "Sven Graziani"
   },
-  "keywords": ["interceptor", "angular", "loading", "state", "tool", "dry", "anexia"],
+  "keywords": [
+    "interceptor",
+    "angular",
+    "loading",
+    "state",
+    "tool",
+    "dry",
+    "anexia"
+  ],
   "repository": {
     "url": "https://github.com/svengraziani/loading-registry-interceptor",
     "type": "git"
   },
   "license": "MIT",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "peerDependencies": {
     "@angular/common": ">=12.0.0",
     "@angular/core": ">= 12.2.0"
