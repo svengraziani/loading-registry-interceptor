@@ -5,6 +5,7 @@
     "email": "sgraziani@anexia-it.com",
     "name": "Sven Graziani"
   },
+  "keywords": ["interceptor", "angular", "loading", "state", "tool", "dry", "anexia"],
   "repository": {
     "url": "https://github.com/svengraziani/loading-registry-interceptor",
     "type": "git"
