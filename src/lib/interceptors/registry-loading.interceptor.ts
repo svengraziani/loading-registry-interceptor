@@ -3,9 +3,9 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {BehaviorSubject, Observable, of, OperatorFunction, throwError} from 'rxjs';
 import {LoadingDictionary} from "../types/loading-dictionary";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
-import {REQUEST_ID_GENERATOR_STRATEGY} from "../tokens/request-id-generator-strategy";
+import {REQUEST_ID_GENERATOR} from "../tokens/request-id-generator-strategy";
 import {RequestIdGeneratorStrategy} from "../interfaces/request-id-generator-strategy";
-import {REQUEST_FILTER_STRATEGY} from "../tokens/request-filter-strategy";
+import {REQUEST_FILTER} from "../tokens/request-filter-strategy";
 import {RequestFilterStrategy} from "../interfaces/request-filter-strategy";
 
 @Injectable({providedIn: 'root'})
@@ -25,8 +25,8 @@ export class RegistryLoadingInterceptor implements HttpInterceptor {
   private readonly networkRequestCounter$: BehaviorSubject<number>;
 
   public constructor(
-    @Inject(REQUEST_ID_GENERATOR_STRATEGY) private readonly requestIdGenerator: RequestIdGeneratorStrategy,
-    @Inject(REQUEST_FILTER_STRATEGY) private readonly requestFilter: RequestFilterStrategy
+    @Inject(REQUEST_ID_GENERATOR) private readonly requestIdGenerator: RequestIdGeneratorStrategy,
+    @Inject(REQUEST_FILTER) private readonly requestFilter: RequestFilterStrategy
   ) {
     this.loadingDictionary = new Map();
     this.stateChangeTrigger$ = new BehaviorSubject<boolean>(false);

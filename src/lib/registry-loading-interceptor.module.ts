@@ -1,21 +1,22 @@
-import {ModuleWithProviders, NgModule, Provider} from '@angular/core';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {RegistryLoadingInterceptor} from './interceptors/registry-loading.interceptor';
-import {ModuleOptions} from './interfaces/module-options';
-import {REQUEST_ID_GENERATOR_STRATEGY} from './tokens/request-id-generator-strategy';
-import {REQUEST_FILTER_STRATEGY} from './tokens/request-filter-strategy';
+import {NgModule, Provider} from '@angular/core';
+import {REQUEST_ID_GENERATOR} from './tokens/request-id-generator-strategy';
+import {REQUEST_FILTER} from './tokens/request-filter-strategy';
+import {UrlFragmentIdGenerator} from "./strategies/url-fragment-id-generator";
+import {NoRequestFiltering} from "./strategies/no-request-filtering";
 
-
-@NgModule()
-export class RegistryLoadingInterceptorModule {
-  static forRoot(options: ModuleOptions): ModuleWithProviders<RegistryLoadingInterceptorModule> {
-    return {
-      ngModule: RegistryLoadingInterceptorModule,
-      providers: [
-        {provide: REQUEST_ID_GENERATOR_STRATEGY, useValue: options.requestIdGenerator},
-        {provide: REQUEST_FILTER_STRATEGY, useValue: options.requestFilter},
-        {provide: HTTP_INTERCEPTORS, useExisting: RegistryLoadingInterceptor, multi: true}
-      ]
-    };
+export const defaultProviders: Provider[] = [
+  {
+    provide: REQUEST_ID_GENERATOR,
+    useClass: UrlFragmentIdGenerator,
+  },
+  {
+    provide: REQUEST_FILTER,
+    useClass: NoRequestFiltering
   }
+];
+
+@NgModule({
+  providers: [defaultProviders]
+})
+export class RegistryLoadingInterceptorModule {
 }

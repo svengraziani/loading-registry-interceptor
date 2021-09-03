@@ -39,14 +39,7 @@ Root Module _(app.module.ts)_ registration and configuration
   declarations: [AppComponent],
   imports: [
     // ... other imports
-    RegistryLoadingInterceptorModule.forRoot({
-      // we use the module provided no request filtering which implements the
-      // RequestFilterStrategy Interface.
-      requestFilter: new NoRequestFiltering(),
-      // we use the module provided url fragment id generator  which implements 
-      // the RequestIdGeneratorStrategy. 
-      requestIdGenerator: new UrlFragmentIdGenerator()
-    })
+    RegistryLoadingInterceptorModule
   ],
   
 })
