@@ -3,6 +3,11 @@
 This library provides an interceptor which maps Http Requests to a Loading State.
 You're able to subscribe per request to the loading state.
 
+## Usage Scenarios
+* implicit "isLoadingAny" used for a global spinner indicator to show that anything is going on in the network
+* explicit "isLoading" may be used to show exact loading indicator to a certain context
+
+* Head  to [EXAMPLE.MD](/docs/EXAMPLE.MD) to se a concrete implementation  
 
 ## Usage
 1) Import the `RegisterLoadingInterceptorModule` in your root module _(hint: most of the time: app.module.ts)_
