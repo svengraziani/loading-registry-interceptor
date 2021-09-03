@@ -6,15 +6,11 @@ You're able to subscribe per request to the loading state.
 ## Usage Scenarios
 * implicit "isLoadingAny" used for a global spinner indicator to show that anything is going on in the network
 * explicit "isLoading" may be used to show exact loading indicator to a certain context
-
-* Head  to [EXAMPLE.MD](/docs/EXAMPLE.MD) to se a concrete implementation  
+ 
 
 ## Usage
 1) Import the `RegisterLoadingInterceptorModule` in your root module _(hint: most of the time: app.module.ts)_
-2) Configure the `RegisterLoadingInterceptorModule` with it's `forRoot()` method.
-   1) You must provide a RequestIdStrategy
-   2) You must provide a RequestFilterStrategy _(default: no requests get filtered)_
-3. Create your own SelectorFacade to the loading state
+2) Create your own SelectorFacade to the loading state
 
 ## Definitions
 
@@ -50,19 +46,26 @@ export class AppModule { }
 @Injectable({providedIn: 'root'})
 export class IsLoadingService {
 
-  public constructor(private readonly loadingRegistry: RegistryLoadingInterceptor) {}
+  public constructor(
+    private readonly loadingRegistry: RegistryLoadingInterceptor,
+    @Inject(REQUEST_ID_GENERATOR) private readonly idGenerator: UrlFragmentIdGenerator
+  ) {
 
-  /**
-   * In this example we are using the UrlFragmentIdGenerator.
-   * */
+  }
+
   public isLoading$(url: string): Observable<boolean> {
-    const requestId = UrlFragmentIdGenerator.getIdentifier(url);
+    const requestId = this.idGenerator.getIdentifier(url);
     return this.loadingRegistry.loadingState$.pipe(
       map(state => state.has(requestId) ? state.get(requestId) as boolean : false),
       distinctUntilChanged()
     );
   }
+
+  public isAnyLoading$(): Observable<boolean> {
+    return this.loadingRegistry.isAnyRequestLoading$;
+  }
 }
+
 ```
 
 ### DataAccess Level: Test DataAccess Example
@@ -92,6 +95,10 @@ export class TestDataAccessService {
 ```
 ### Component Level
 ```typescript
+import {Component} from '@angular/core';
+import {TestDataAccessService} from "./test-data-access.service";
+import {IsLoadingService} from "./is-loading.service";
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -99,17 +106,31 @@ export class TestDataAccessService {
 })
 export class AppComponent {
 
-  public isLoading$: Observable<boolean>;
-
-  public constructor(private readonly testDataAccess: TestDataAccessService) {
+  public constructor(
+    private readonly testDataAccess: TestDataAccessService,
+    private readonly isLoadingService: IsLoadingService
+  ) {
     // connect the facade with the view
-    this.isLoading$ = testDataAccess.userListLoading$;
+    testDataAccess.userListLoading$.subscribe(res => console.log('explicit', res));
+    // implicit loading state, will provide Loadign state for any http request
+    this.isLoadingService.isAnyLoading$().subscribe(res => console.log('implicit', res));
+
+    this.testDataAccess.getUsers$().subscribe(console.log);
+
   }
 
 }
-```
 
+```
 
 ## Data Sequence Diagram
 ![](data-flow-sequence.png)
     
+## Customize
+
+To use custom Request ID Strategy or custom Request Filtering you just need
+to provide `REQUEST_ID_GENERATOR` or `REQUEST_ID_GENERATOR`.
+
+```typescripts
+ {provide: REQUEST_ID_GENERATOR, useClass: CustomIdGenerator},
+```

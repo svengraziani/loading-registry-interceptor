@@ -28,6 +28,7 @@ export class RegistryLoadingInterceptor implements HttpInterceptor {
     @Inject(REQUEST_ID_GENERATOR) private readonly requestIdGenerator: RequestIdGeneratorStrategy,
     @Inject(REQUEST_FILTER) private readonly requestFilter: RequestFilterStrategy
   ) {
+
     this.loadingDictionary = new Map();
     this.stateChangeTrigger$ = new BehaviorSubject<boolean>(false);
     this.networkRequestCounter$ = new BehaviorSubject<number>(0);
