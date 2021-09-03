@@ -14,7 +14,7 @@ export class RegistryLoadingInterceptorModule {
       providers: [
         {provide: REQUEST_ID_GENERATOR_STRATEGY, useValue: config.requestIdGenerator},
         {provide: REQUEST_FILTER_STRATEGY, useValue: config.requestFilter},
-        {provide: HTTP_INTERCEPTORS, useExisting: RegistryLoadingInterceptor}
+        {provide: HTTP_INTERCEPTORS, useExisting: RegistryLoadingInterceptor, multi: true}
       ]
     };
   }
