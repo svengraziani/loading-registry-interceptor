@@ -2,7 +2,7 @@ import {RequestFilterStrategy} from "./request-filter-strategy";
 import {RequestIdGeneratorStrategy} from "./request-id-generator-strategy";
 
 
-export interface ModuleConfig {
+export interface ModuleOptions {
   requestFilter: RequestFilterStrategy;
   requestIdGenerator: RequestIdGeneratorStrategy;
 }
