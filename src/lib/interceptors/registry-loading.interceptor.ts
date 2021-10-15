@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {BehaviorSubject, Observable, of, OperatorFunction, throwError} from 'rxjs';
 import {LoadingDictionary} from "../types/loading-dictionary";
-import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {catchError, finalize, map, switchMap, tap} from "rxjs/operators";
 import {REQUEST_ID_GENERATOR} from "../tokens/request-id-generator-strategy";
 import {RequestIdGeneratorStrategy} from "../interfaces/request-id-generator-strategy";
 import {REQUEST_FILTER} from "../tokens/request-filter-strategy";
@@ -46,16 +46,29 @@ export class RegistryLoadingInterceptor implements HttpInterceptor {
   }
 
   public intercept(request: HttpRequest<unknown>, delegate: HttpHandler): Observable<HttpEvent<unknown>> {
+    let requestCancelled = true;
     return delegate.handle(request)
       .pipe(
+        map((event: HttpEvent<any>) => {
+          if (event?.type === 4) {
+            requestCancelled = false;
+          }
+          return event;
+        }),
         this.mapHttpEventToLoadingCount$(),
         this.mapHttpEventToLoadingState$(request),
         catchError(error => {
+          requestCancelled = false;
           this.updateLoadingCounter(false);
           if(!this.requestFilter.exclude(request)) {
             this.updateLoadingState(this.getRequestId(request), false);
           }
           return throwError(error);
+        }),
+        finalize(() => {
+          if (requestCancelled) {
+            this.decrementCounter();
+          }
         })
       );
   }
